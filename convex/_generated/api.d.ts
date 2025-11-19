@@ -14,12 +14,33 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as bookings from "../bookings.js";
+import type * as events from "../events.js";
+import type * as media from "../media.js";
+import type * as newsletter from "../newsletter.js";
+import type * as seed from "../seed.js";
+import type * as tracks from "../tracks.js";
 
 export const api: FilterApi<
-  ApiFromModules<{}>,
+  ApiFromModules<{
+    bookings: typeof bookings;
+    events: typeof events;
+    media: typeof media;
+    newsletter: typeof newsletter;
+    seed: typeof seed;
+    tracks: typeof tracks;
+  }>,
   FunctionReference<any, "public">
->;
+> = {} as any;
+
 export const internal: FilterApi<
-  ApiFromModules<{}>,
+  ApiFromModules<{
+    bookings: typeof bookings;
+    events: typeof events;
+    media: typeof media;
+    newsletter: typeof newsletter;
+    seed: typeof seed;
+    tracks: typeof tracks;
+  }>,
   FunctionReference<any, "internal">
->;
+> = {} as any;
