@@ -43,7 +43,7 @@ export function NewsletterSignup() {
     } catch (error: any) {
       setStatus("error");
       if (error instanceof z.ZodError) {
-        setMessage(error.errors[0].message);
+        setMessage(error.issues[0].message);
       } else {
         setMessage("Something went wrong. Please try again.");
       }
