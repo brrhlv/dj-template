@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -18,6 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Check, Send, AlertCircle } from "lucide-react";
+import { createBooking } from "@/app/actions/bookings";
 
 const bookingSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -34,8 +33,6 @@ type BookingFormData = z.infer<typeof bookingSchema>;
 export function BookingForm() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
-
-  const createBooking = useMutation(api.bookings.create);
 
   const form = useForm<BookingFormData>({
     resolver: zodResolver(bookingSchema),
@@ -55,11 +52,16 @@ export function BookingForm() {
     setMessage("");
 
     try {
-      await createBooking(data);
+      const result = await createBooking(data);
 
-      setStatus("success");
-      setMessage("Booking request submitted successfully! We'll get back to you within 24 hours.");
-      form.reset();
+      if (result.success) {
+        setStatus("success");
+        setMessage("Booking request submitted successfully! We'll get back to you within 24 hours.");
+        form.reset();
+      } else {
+        setStatus("error");
+        setMessage(result.error || "Failed to submit booking request. Please try again.");
+      }
 
       // Reset status after 5 seconds
       setTimeout(() => {

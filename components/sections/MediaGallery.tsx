@@ -1,7 +1,5 @@
 "use client";
 
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,23 +7,14 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Image as ImageIcon, Video, X } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import type { Media } from "@/lib/db/schema";
 
-export function MediaGallery() {
-  const media = useQuery(api.media.getAll);
-  const [selectedMedia, setSelectedMedia] = useState<any>(null);
+interface MediaGalleryProps {
+  media: Media[];
+}
 
-  if (!media) {
-    return (
-      <section className="py-20 bg-gradient-to-b from-gray-900 to-black">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent" />
-          </div>
-        </div>
-      </section>
-    );
-  }
-
+export function MediaGallery({ media }: MediaGalleryProps) {
+  const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
   const displayMedia = media.slice(0, 6);
 
   return (
@@ -44,7 +33,7 @@ export function MediaGallery() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
             {displayMedia.map((item) => (
               <Card
-                key={item._id}
+                key={item.id}
                 className="bg-card/50 backdrop-blur border-white/10 overflow-hidden group cursor-pointer hover:border-primary/50 transition-all duration-300"
                 onClick={() => setSelectedMedia(item)}
               >

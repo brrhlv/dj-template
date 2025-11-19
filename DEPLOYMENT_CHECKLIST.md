@@ -1,277 +1,134 @@
 # Deployment Checklist
 
-Use this checklist to ensure a smooth deployment of your DJ website.
+## Prerequisites
+- [ ] Vercel account created
+- [ ] Project connected to Vercel
+- [ ] Git repository set up
 
-## 📋 Pre-Deployment
+## Vercel Setup
 
-### Content Preparation
+### 1. Create Postgres Database
+- [ ] Navigate to Vercel Dashboard
+- [ ] Go to Storage tab
+- [ ] Create new Postgres database
+- [ ] Note down database credentials
 
-- [ ] **DJ Name/Branding**
-  - [ ] Update "DJ NAME" in Navigation (`components/sections/Navigation.tsx`)
-  - [ ] Update "DJ NAME" in Hero (`components/sections/Hero.tsx`)
-  - [ ] Update "DJ NAME" in Footer (`components/sections/Footer.tsx`)
-  - [ ] Update page titles in `app/layout.tsx`
+### 2. Environment Variables
+Vercel automatically sets these when you create a Postgres database:
+- [ ] POSTGRES_URL
+- [ ] POSTGRES_PRISMA_URL
+- [ ] POSTGRES_URL_NON_POOLING
+- [ ] POSTGRES_USER
+- [ ] POSTGRES_HOST
+- [ ] POSTGRES_PASSWORD
+- [ ] POSTGRES_DATABASE
 
-- [ ] **Biography & About**
-  - [ ] Write custom biography in `app/about/page.tsx`
-  - [ ] Update achievements section
-  - [ ] Modify genres/skills list
-  - [ ] Update hero tagline and description
+### 3. Local Development Setup
+```bash
+# Copy environment variables
+cp .env.local.example .env.local
 
-- [ ] **Social Media Links**
-  - [ ] Instagram URL in Footer
-  - [ ] Twitter URL in Footer
-  - [ ] Facebook URL in Footer
-  - [ ] YouTube URL in Footer
-  - [ ] SoundCloud URL in Footer
-  - [ ] Contact email address
+# Install dependencies
+npm install
 
-- [ ] **Real Content**
-  - [ ] Add real track data (or use seed data)
-  - [ ] Add upcoming events
-  - [ ] Upload photos to media gallery
-  - [ ] Upload videos to media gallery
+# Generate migrations
+npm run db:generate
 
-- [ ] **Images**
-  - [ ] Replace hero background image
-  - [ ] Add DJ headshot for About page
-  - [ ] Upload event venue photos
-  - [ ] Add track cover art
-  - [ ] Upload media gallery photos
+# Run migrations
+npm run db:migrate
 
-### Technical Preparation
+# Seed database (optional)
+npm run db:seed
 
-- [ ] **Environment Variables**
-  - [ ] Create `.env.local` with `NEXT_PUBLIC_CONVEX_URL`
-  - [ ] Verify Convex deployment URL is correct
-  - [ ] Test environment variables work locally
+# Start dev server
+npm run dev
+```
 
-- [ ] **Dependencies**
-  - [ ] Run `npm install` to ensure all packages installed
-  - [ ] Check for security vulnerabilities: `npm audit`
-  - [ ] Update dependencies if needed: `npm update`
+### 4. Deploy to Vercel
 
-- [ ] **Code Quality**
-  - [ ] Run linter: `npm run lint`
-  - [ ] Fix any TypeScript errors
-  - [ ] Test all pages locally
-  - [ ] Test mobile responsiveness
+#### Option A: Git Push (Recommended)
+```bash
+git add .
+git commit -m "Migrate to Vercel Postgres"
+git push
+```
+Vercel will automatically deploy.
 
-- [ ] **Testing**
-  - [ ] Test homepage loads correctly
-  - [ ] Test music page with filters
-  - [ ] Test events page (upcoming/past toggle)
-  - [ ] Test media gallery and lightbox
-  - [ ] Test booking form submission
-  - [ ] Test newsletter signup
-  - [ ] Test all navigation links
+#### Option B: Manual Deploy
+```bash
+vercel --prod
+```
 
-## 🗄️ Convex Setup
+### 5. Post-Deployment
 
-- [ ] **Development**
-  - [ ] Run `npx convex dev` successfully
-  - [ ] Verify `.env.local` created
-  - [ ] Test queries work in local dev
+After deployment, you need to run migrations on production:
 
-- [ ] **Production Deployment**
-  - [ ] Run `npx convex deploy`
-  - [ ] Note production Convex URL
-  - [ ] Verify schema deployed
-  - [ ] Run seed data (optional): `npx convex run seed:seedDatabase`
+1. Go to Vercel Dashboard → Settings → Environment Variables
+2. Ensure all POSTGRES_* variables are set
+3. Run migrations using Vercel CLI or add to build command:
 
-- [ ] **Database Content**
-  - [ ] Add real tracks via Convex dashboard
-  - [ ] Add real events
-  - [ ] Upload media items
-  - [ ] Test data displays on site
+```bash
+# Add to package.json build script
+"build": "npm run db:migrate && next build"
+```
 
-## 🚀 Vercel Deployment
+Or run manually after deployment:
+```bash
+vercel env pull .env.production.local
+npm run db:migrate
+```
 
-- [ ] **Repository Setup**
-  - [ ] Initialize git: `git init`
-  - [ ] Create `.gitignore` (already exists)
-  - [ ] Commit all files: `git add . && git commit -m "Initial commit"`
-  - [ ] Push to GitHub
+### 6. Seed Production Database (Optional)
+```bash
+npm run db:seed
+```
 
-- [ ] **Vercel Configuration**
-  - [ ] Create account at vercel.com
-  - [ ] Import GitHub repository
-  - [ ] Verify framework detected as Next.js
-  - [ ] Add environment variable: `NEXT_PUBLIC_CONVEX_URL=<production-url>`
-  - [ ] Configure domain (optional)
+## Verification
 
-- [ ] **Deploy**
-  - [ ] Click "Deploy" button
-  - [ ] Wait for build to complete
-  - [ ] Verify deployment successful
-  - [ ] Test production URL
+After deployment, verify:
+- [ ] Homepage loads
+- [ ] Events page displays
+- [ ] Music page works
+- [ ] Media gallery functions
+- [ ] Booking form submits
+- [ ] Newsletter signup works
 
-## ✅ Post-Deployment
+## Migration Complete!
 
-### Verification
+Your DJ template is now running on:
+- ✅ Vercel Postgres (database)
+- ✅ Drizzle ORM (type-safe queries)
+- ✅ Next.js Server Components (SSR)
+- ✅ Server Actions (data mutations)
 
-- [ ] **Pages Load**
-  - [ ] Homepage displays correctly
-  - [ ] Music page shows tracks
-  - [ ] Events page shows upcoming events
-  - [ ] Media gallery displays
-  - [ ] About page loads
-  - [ ] Booking page works
+## Quick Commands Reference
 
-- [ ] **Functionality**
-  - [ ] Navigation works on all pages
-  - [ ] Mobile menu opens/closes
-  - [ ] Genre filtering works (music page)
-  - [ ] Event toggle works (upcoming/past)
-  - [ ] Media type filtering works
-  - [ ] Lightbox opens for media
-  - [ ] Booking form validation works
-  - [ ] Newsletter signup works
-  - [ ] External links open correctly
+```bash
+# Development
+npm run dev              # Start dev server
 
-- [ ] **Performance**
-  - [ ] Run Lighthouse audit (aim for 90+ score)
-  - [ ] Check page load times
-  - [ ] Test on slow 3G connection
-  - [ ] Verify images load properly
+# Database
+npm run db:generate      # Generate migrations
+npm run db:migrate       # Run migrations
+npm run db:seed         # Seed database
 
-- [ ] **Mobile Testing**
-  - [ ] Test on iPhone
-  - [ ] Test on Android
-  - [ ] Test on tablet
-  - [ ] Verify responsive design
-  - [ ] Check touch interactions
+# Deployment
+npm run build           # Build for production
+npm start              # Start production server
+```
 
-- [ ] **Browser Testing**
-  - [ ] Chrome
-  - [ ] Firefox
-  - [ ] Safari
-  - [ ] Edge
+## Support
 
-### SEO & Analytics
+If you encounter issues:
+1. Check MIGRATION_GUIDE.md
+2. Verify environment variables
+3. Review Vercel deployment logs
+4. Check database connection
 
-- [ ] **SEO**
-  - [ ] Update meta descriptions
-  - [ ] Add Open Graph tags
-  - [ ] Add Twitter Card tags
-  - [ ] Create sitemap.xml
-  - [ ] Submit to Google Search Console
-  - [ ] Verify robots.txt
+## Next Steps
 
-- [ ] **Analytics**
-  - [ ] Add Google Analytics (optional)
-  - [ ] Add Facebook Pixel (optional)
-  - [ ] Set up conversion tracking
-  - [ ] Test analytics firing
-
-### Marketing Setup
-
-- [ ] **Social Media**
-  - [ ] Update all bio links to new site
-  - [ ] Post announcement
-  - [ ] Share on Instagram Stories
-  - [ ] Pin to Twitter
-
-- [ ] **Email**
-  - [ ] Set up email forwarding for booking@
-  - [ ] Test email delivery
-  - [ ] Create welcome email template (optional)
-
-- [ ] **Booking Integration**
-  - [ ] Set up email notifications for bookings (requires custom integration)
-  - [ ] Test booking request flow
-  - [ ] Configure auto-reply (optional)
-
-## 🔧 Optional Enhancements
-
-### Email Integration
-
-- [ ] Create SendGrid/Resend account
-- [ ] Add API keys to Vercel environment variables
-- [ ] Create Convex action for sending emails
-- [ ] Update booking mutation to send notifications
-- [ ] Test email delivery
-
-### Payment Integration
-
-- [ ] Set up Stripe account
-- [ ] Add payment for booking deposits
-- [ ] Create payment confirmation emails
-- [ ] Test payment flow
-
-### Advanced Features
-
-- [ ] Add Spotify embed players
-- [ ] Add SoundCloud embed players
-- [ ] Add event calendar integration
-- [ ] Add ticket purchase tracking
-- [ ] Add merch store
-- [ ] Add press kit download
-- [ ] Add contact management system
-
-## 📊 Monitoring
-
-### Daily
-
-- [ ] Check booking requests in Convex dashboard
-- [ ] Review newsletter signups
-- [ ] Monitor site uptime
-
-### Weekly
-
-- [ ] Review analytics
-- [ ] Check for errors in Vercel logs
-- [ ] Update upcoming events
-- [ ] Add new tracks if released
-
-### Monthly
-
-- [ ] Review performance metrics
-- [ ] Update past events to "past" status
-- [ ] Backup data from Convex
-- [ ] Security updates: `npm audit fix`
-
-## 🆘 Troubleshooting
-
-### Common Issues
-
-**Build fails on Vercel**
-- [ ] Verify `NEXT_PUBLIC_CONVEX_URL` is set
-- [ ] Check Convex is deployed
-- [ ] Review build logs for errors
-
-**No data showing**
-- [ ] Verify Convex production URL is correct
-- [ ] Check data exists in Convex dashboard
-- [ ] Test queries in Convex dashboard
-
-**Booking form not working**
-- [ ] Check Convex mutation works
-- [ ] Review browser console for errors
-- [ ] Verify form validation
-
-**Images not loading**
-- [ ] Check image URLs are valid
-- [ ] Verify images are publicly accessible
-- [ ] Check for CORS issues
-
-## 📞 Support Resources
-
-- **Next.js Issues**: https://github.com/vercel/next.js/issues
-- **Convex Support**: https://discord.gg/convex
-- **Vercel Support**: https://vercel.com/support
-- **Template Issues**: Review documentation files
-
-## ✨ Final Steps
-
-- [ ] Announce launch on social media
-- [ ] Share with fans and followers
-- [ ] Get feedback from users
-- [ ] Plan regular content updates
-- [ ] Enjoy your new professional website!
-
----
-
-**Congratulations on deploying your DJ website!** 🎉
-
-Remember to keep content fresh and engage with your audience regularly.
+Consider adding:
+- Image upload functionality (Vercel Blob)
+- Email notifications (Resend/SendGrid)
+- Analytics (Vercel Analytics)
+- CMS integration (Sanity/Contentful)

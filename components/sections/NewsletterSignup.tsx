@@ -1,12 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mail, Check, AlertCircle } from "lucide-react";
 import { z } from "zod";
+import { subscribe } from "@/app/actions/newsletter";
 
 const emailSchema = z.string().email("Please enter a valid email address");
 
@@ -14,8 +13,6 @@ export function NewsletterSignup() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
-
-  const subscribe = useMutation(api.newsletter.subscribe);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,11 +24,16 @@ export function NewsletterSignup() {
       emailSchema.parse(email);
 
       // Subscribe
-      await subscribe({ email });
+      const result = await subscribe(email);
 
-      setStatus("success");
-      setMessage("Successfully subscribed! Check your email for confirmation.");
-      setEmail("");
+      if (result.success) {
+        setStatus("success");
+        setMessage(result.message);
+        setEmail("");
+      } else {
+        setStatus("error");
+        setMessage(result.message);
+      }
 
       // Reset after 5 seconds
       setTimeout(() => {
@@ -42,8 +44,6 @@ export function NewsletterSignup() {
       setStatus("error");
       if (error instanceof z.ZodError) {
         setMessage(error.errors[0].message);
-      } else if (error.message?.includes("already subscribed")) {
-        setMessage("This email is already subscribed!");
       } else {
         setMessage("Something went wrong. Please try again.");
       }

@@ -1,36 +1,62 @@
-import { getUpcomingEvents } from "@/app/actions/events";
+"use client";
+
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, MapPin, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
-import Link from "next/link";
+import type { Event } from "@/lib/db/schema";
 
-export async function UpcomingEvents() {
-  const events = await getUpcomingEvents();
-  const displayEvents = events.slice(0, 3);
+interface EventsClientProps {
+  upcomingEvents: Event[];
+  pastEvents: Event[];
+}
+
+export function EventsClient({ upcomingEvents, pastEvents }: EventsClientProps) {
+  const [showPast, setShowPast] = useState(false);
+
+  const displayEvents = showPast ? pastEvents : upcomingEvents;
 
   return (
-    <section className="py-20 bg-black">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            <span className="gradient-text">Upcoming Events</span>
-          </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Catch me live at these upcoming shows
-          </p>
-        </div>
-
-        {displayEvents.length === 0 ? (
-          <div className="text-center py-12">
-            <Calendar className="w-16 h-16 mx-auto text-gray-600 mb-4" />
-            <p className="text-gray-400 text-lg">No upcoming events scheduled</p>
-            <p className="text-gray-500 text-sm mt-2">Check back soon for new tour dates</p>
+    <>
+      {/* Toggle */}
+      <section className="py-6 bg-black/50 backdrop-blur border-y border-white/10">
+        <div className="container mx-auto px-4">
+          <div className="flex gap-2">
+            <Badge
+              variant={!showPast ? "default" : "outline"}
+              className="cursor-pointer hover:bg-primary/20 transition-colors text-sm px-4 py-2"
+              onClick={() => setShowPast(false)}
+            >
+              Upcoming ({upcomingEvents.length})
+            </Badge>
+            <Badge
+              variant={showPast ? "default" : "outline"}
+              className="cursor-pointer hover:bg-primary/20 transition-colors text-sm px-4 py-2"
+              onClick={() => setShowPast(true)}
+            >
+              Past Events ({pastEvents.length})
+            </Badge>
           </div>
-        ) : (
-          <>
-            <div className="space-y-4 mb-8 max-w-4xl mx-auto">
+        </div>
+      </section>
+
+      {/* Events List */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          {displayEvents.length === 0 ? (
+            <div className="text-center py-12">
+              <Calendar className="w-16 h-16 mx-auto text-gray-600 mb-4" />
+              <p className="text-gray-400 text-lg">
+                {showPast ? "No past events" : "No upcoming events scheduled"}
+              </p>
+              <p className="text-gray-500 text-sm mt-2">
+                {showPast ? "" : "Check back soon for new tour dates"}
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-4 max-w-4xl mx-auto">
               {displayEvents.map((event) => (
                 <Card
                   key={event.id}
@@ -38,7 +64,7 @@ export async function UpcomingEvents() {
                 >
                   <div className="md:flex">
                     {event.imageUrl && (
-                      <div className="md:w-48 h-48 md:h-auto overflow-hidden">
+                      <div className="md:w-64 h-48 md:h-auto overflow-hidden">
                         <img
                           src={event.imageUrl}
                           alt={event.title}
@@ -72,10 +98,12 @@ export async function UpcomingEvents() {
                             </span>
                           </div>
 
-                          <Badge variant="secondary">Upcoming</Badge>
+                          <Badge variant={showPast ? "outline" : "secondary"}>
+                            {showPast ? "Past Event" : "Upcoming"}
+                          </Badge>
                         </div>
 
-                        {event.ticketLink && (
+                        {!showPast && event.ticketLink && (
                           <a
                             href={event.ticketLink}
                             target="_blank"
@@ -93,21 +121,9 @@ export async function UpcomingEvents() {
                 </Card>
               ))}
             </div>
-
-            <div className="text-center">
-              <Link href="/events">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-2 border-white/20 hover:bg-white/10"
-                >
-                  View All Events
-                </Button>
-              </Link>
-            </div>
-          </>
-        )}
-      </div>
-    </section>
+          )}
+        </div>
+      </section>
+    </>
   );
 }

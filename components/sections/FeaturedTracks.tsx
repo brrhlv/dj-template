@@ -1,28 +1,12 @@
-"use client";
-
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
+import { getFeaturedTracks } from "@/app/actions/tracks";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Music2, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-export function FeaturedTracks() {
-  const tracks = useQuery(api.tracks.getFeatured);
-
-  if (!tracks) {
-    return (
-      <section className="py-20 bg-gradient-to-b from-black to-gray-900">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent" />
-          </div>
-        </div>
-      </section>
-    );
-  }
-
+export async function FeaturedTracks() {
+  const tracks = await getFeaturedTracks();
   const displayTracks = tracks.slice(0, 4);
 
   return (
@@ -40,7 +24,7 @@ export function FeaturedTracks() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {displayTracks.map((track) => (
             <Card
-              key={track._id}
+              key={track.id}
               className="bg-card/50 backdrop-blur border-white/10 overflow-hidden group hover:border-primary/50 transition-all duration-300"
             >
               <div className="aspect-square relative overflow-hidden bg-gradient-to-br from-purple-900/20 to-cyan-900/20">
