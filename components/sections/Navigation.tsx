@@ -31,35 +31,49 @@ export function Navigation() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-black/80 backdrop-blur-md border-b border-white/10"
-          : "bg-transparent"
+          ? "bg-electric-black/95 backdrop-blur-sm border-b-2 border-neon-cyan/20"
+          : "bg-electric-black/50"
       }`}
     >
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <Link href="/" className="text-2xl font-bold gradient-text">
-            DJ NAME
+      <div className="container mx-auto px-6 lg:px-8">
+        <div className="flex items-center justify-between h-[90px]">
+
+          {/* Logo with accent bar */}
+          <Link href="/" className="flex flex-col gap-1 group">
+            <span className="text-[32px] font-bold text-white font-display">
+              DJ SHADOW
+            </span>
+            <div className="h-[3px] w-0 bg-neon-cyan group-hover:w-full transition-all duration-300" />
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+          {/* Desktop nav - uppercase mono */}
+          <div className="hidden lg:flex items-center gap-10">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-gray-300 hover:text-white transition-colors relative group"
+                className="text-[12px] font-mono uppercase tracking-wider text-concrete-400
+                           hover:text-neon-cyan transition-colors relative group"
               >
                 {link.label}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-purple-cyan group-hover:w-full transition-all duration-300" />
+                <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-neon-cyan
+                               group-hover:w-full transition-all duration-200" />
               </Link>
             ))}
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden md:block">
+          {/* CTA - neo-brutalist button */}
+          <div className="hidden lg:block">
             <Link href="/booking">
-              <Button className="gradient-purple-cyan hover:opacity-90 transition-opacity">
+              <Button className="
+                bg-transparent border-2 border-neon-cyan text-neon-cyan
+                hover:bg-neon-cyan hover:text-electric-black
+                px-8 py-6 text-sm font-mono uppercase tracking-wider
+                transition-all duration-200
+                shadow-[4px_4px_0px_0px_rgba(0,217,255,0.3)]
+                hover:shadow-[6px_6px_0px_0px_rgba(0,217,255,0.5)]
+                hover:translate-x-[-2px] hover:translate-y-[-2px]
+              ">
                 Book Now
               </Button>
             </Link>
@@ -67,7 +81,7 @@ export function Navigation() {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden text-white"
+            className="lg:hidden text-white border-2 border-neon-cyan p-2 hover:bg-neon-cyan hover:text-electric-black transition-colors"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -75,26 +89,45 @@ export function Navigation() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu - Full Screen Takeover */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-black/95 backdrop-blur-md border-t border-white/10">
-          <div className="container mx-auto px-4 py-6 flex flex-col gap-4">
-            {navLinks.map((link) => (
+        <div className="fixed inset-0 z-40 bg-void-black flex flex-col items-center justify-center lg:hidden">
+          <div className="space-y-8 text-center">
+            {navLinks.map((link, index) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-lg font-medium text-gray-300 hover:text-white transition-colors"
+                className="block text-4xl font-display font-bold text-white
+                           hover:text-neon-cyan transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
+                style={{ animationDelay: `${index * 100}ms` }}
               >
                 {link.label}
               </Link>
             ))}
+
             <Link href="/booking" onClick={() => setIsMobileMenuOpen(false)}>
-              <Button className="w-full gradient-purple-cyan hover:opacity-90 transition-opacity">
+              <Button className="
+                mt-8 bg-neon-cyan text-electric-black font-mono uppercase text-sm
+                px-10 py-7 tracking-wider
+                shadow-[6px_6px_0px_0px_rgba(255,204,0,0.5)]
+                hover:shadow-[8px_8px_0px_0px_rgba(255,204,0,0.7)]
+                hover:translate-x-[-2px] hover:translate-y-[-2px]
+                transition-all duration-150
+              ">
                 Book Now
               </Button>
             </Link>
           </div>
+
+          {/* Close button in top right */}
+          <button
+            className="absolute top-8 right-8 text-white border-2 border-neon-cyan p-2
+                       hover:bg-neon-cyan hover:text-electric-black transition-colors"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <X size={32} />
+          </button>
         </div>
       )}
     </nav>
