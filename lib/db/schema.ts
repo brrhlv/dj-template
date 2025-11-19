@@ -1,4 +1,4 @@
-import { pgTable, text, serial, boolean, timestamp, varchar } from 'drizzle-orm/pg-core';
+import { pgTable, text, serial, boolean, timestamp, varchar, integer } from 'drizzle-orm/pg-core';
 
 export const events = pgTable('events', {
   id: serial('id').primaryKey(),
@@ -32,7 +32,7 @@ export const media = pgTable('media', {
   url: text('url').notNull(),
   thumbnailUrl: text('thumbnail_url'),
   caption: text('caption'),
-  eventId: serial('event_id').references(() => events.id),
+  eventId: integer('event_id').references(() => events.id),
   uploadDate: text('upload_date').notNull(),
 });
 
