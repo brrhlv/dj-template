@@ -26,28 +26,36 @@ const quickLinks = [
 
 export function Footer() {
   return (
-    <footer className="bg-black border-t border-white/10">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+    <footer className="bg-void-black border-t-4 border-neon-cyan">
+      <div className="container mx-auto px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div className="md:col-span-2">
-            <Link href="/" className="text-2xl font-bold gradient-text inline-block mb-4">
-              DJ NAME
+            <Link href="/" className="inline-block mb-6 group">
+              <div className="text-[32px] font-bold text-white font-display">
+                DJ SHADOW
+              </div>
+              <div className="h-[3px] w-0 bg-neon-cyan group-hover:w-full transition-all duration-300" />
             </Link>
-            <p className="text-gray-400 mb-4 max-w-md">
+            <p className="text-concrete-400 mb-6 max-w-md text-sm leading-relaxed">
               Professional DJ bringing energy to dance floors worldwide with cutting-edge electronic music.
             </p>
-            <div className="flex gap-4">
+
+            {/* Social links - brutalist squares */}
+            <div className="flex gap-3">
               {socialLinks.map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-white/5 hover:bg-white/10 p-3 rounded-full transition-colors group"
+                  className="w-12 h-12 border-2 border-neon-cyan bg-electric-black
+                             flex items-center justify-center
+                             hover:bg-neon-cyan hover:text-electric-black
+                             transition-all duration-150 group"
                   aria-label={social.label}
                 >
-                  <social.icon className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
+                  <social.icon className="w-5 h-5 text-neon-cyan group-hover:text-electric-black transition-colors" />
                 </a>
               ))}
             </div>
@@ -55,13 +63,13 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2">
+            <h3 className="text-mono text-neon-cyan text-xs mb-6">// NAVIGATION</h3>
+            <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-gray-400 hover:text-white transition-colors"
+                    className="text-concrete-400 hover:text-white transition-colors text-sm font-mono uppercase text-[11px]"
                   >
                     {link.label}
                   </Link>
@@ -72,15 +80,15 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Contact</h3>
-            <ul className="space-y-3">
+            <h3 className="text-mono text-volt-yellow text-xs mb-6">// CONTACT</h3>
+            <ul className="space-y-4">
               <li>
                 <a
-                  href="mailto:booking@djname.com"
-                  className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
+                  href="mailto:booking@djshadow.com"
+                  className="text-concrete-400 hover:text-white transition-colors flex items-start gap-2 text-xs"
                 >
-                  <Mail className="w-4 h-4" />
-                  booking@djname.com
+                  <Mail className="w-4 h-4 text-volt-yellow flex-shrink-0 mt-0.5" />
+                  <span className="font-mono">BOOKING@DJSHADOW.COM</span>
                 </a>
               </li>
               <li>
@@ -88,28 +96,28 @@ export function Footer() {
                   href="https://soundcloud.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
+                  className="text-concrete-400 hover:text-white transition-colors flex items-start gap-2 text-xs"
                 >
-                  <Music2 className="w-4 h-4" />
-                  SoundCloud
+                  <Music2 className="w-4 h-4 text-volt-yellow flex-shrink-0 mt-0.5" />
+                  <span className="font-mono">SOUNDCLOUD</span>
                 </a>
               </li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-8 border-t border-white/10">
+        {/* Bottom Bar - brutalist */}
+        <div className="pt-8 border-t-2 border-concrete-300">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-gray-500">
-              © {new Date().getFullYear()} DJ NAME. All rights reserved.
+            <p className="text-xs text-concrete-400 font-mono">
+              © {new Date().getFullYear()} DJ SHADOW. ALL RIGHTS RESERVED.
             </p>
-            <div className="flex gap-6 text-sm text-gray-500">
-              <Link href="/privacy" className="hover:text-white transition-colors">
-                Privacy Policy
+            <div className="flex gap-6 text-xs text-concrete-400 font-mono">
+              <Link href="/privacy" className="hover:text-neon-cyan transition-colors">
+                PRIVACY
               </Link>
-              <Link href="/terms" className="hover:text-white transition-colors">
-                Terms of Service
+              <Link href="/terms" className="hover:text-neon-cyan transition-colors">
+                TERMS
               </Link>
             </div>
           </div>

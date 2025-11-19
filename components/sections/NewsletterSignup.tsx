@@ -57,46 +57,72 @@ export function NewsletterSignup() {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-b from-black to-gray-900">
-      <div className="container mx-auto px-4">
-        <div className="max-w-2xl mx-auto text-center">
-          <div className="bg-card/50 backdrop-blur border border-white/10 rounded-lg p-8 md:p-12">
-            <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Mail className="w-8 h-8 text-primary" />
+    <section className="py-32 bg-void-black relative overflow-hidden">
+      {/* Geometric background elements */}
+      <div className="absolute top-20 left-10 w-2 h-48 bg-toxic-green/20" />
+      <div className="absolute bottom-20 right-20 w-40 h-40 border-4 border-neon-cyan/20" />
+
+      <div className="container mx-auto px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto">
+          <div className="bg-concrete-200 border-2 border-toxic-green p-8 md:p-16
+                         shadow-[8px_8px_0px_0px_rgba(0,255,102,0.3)]">
+
+            {/* Icon - brutalist */}
+            <div className="w-20 h-20 border-4 border-toxic-green bg-electric-black
+                           flex items-center justify-center mx-auto mb-8">
+              <Mail className="w-10 h-10 text-toxic-green" />
             </div>
 
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              <span className="gradient-text">Stay Updated</span>
-            </h2>
+            {/* Header */}
+            <div className="text-center mb-8">
+              <div className="text-mono text-toxic-green text-xs mb-4">
+                // NEWSLETTER
+              </div>
+              <h2 className="text-display-md font-display text-white mb-4">
+                Stay <span className="gradient-text-primary">Updated</span>
+              </h2>
+              <p className="text-concrete-400 text-sm">
+                Exclusive updates, new releases, and tour announcements
+              </p>
+            </div>
 
-            <p className="text-gray-400 mb-8">
-              Subscribe to my newsletter for exclusive updates, new releases, and upcoming tour announcements
-            </p>
-
+            {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <Input
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder="YOUR.EMAIL@DOMAIN.COM"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={status === "loading" || status === "success"}
-                  className="flex-1 bg-background/50 border-white/20 focus:border-primary"
+                  className="flex-1 bg-electric-black border-2 border-concrete-300
+                           text-white placeholder:text-concrete-400 placeholder:font-mono
+                           focus:border-toxic-green font-mono text-sm px-4 py-6
+                           disabled:opacity-50"
                 />
                 <Button
                   type="submit"
                   disabled={status === "loading" || status === "success"}
-                  className="gradient-purple-cyan hover:opacity-90 transition-opacity disabled:opacity-50"
+                  className={`
+                    bg-transparent border-2 border-toxic-green text-toxic-green
+                    hover:bg-toxic-green hover:text-electric-black
+                    px-8 py-6 text-xs font-mono uppercase tracking-wider
+                    transition-all duration-150
+                    disabled:opacity-50 disabled:cursor-not-allowed
+                    shadow-[4px_4px_0px_0px_rgba(0,255,102,0.3)]
+                    hover:shadow-[6px_6px_0px_0px_rgba(0,255,102,0.5)]
+                    hover:translate-x-[-2px] hover:translate-y-[-2px]
+                  `}
                 >
                   {status === "loading" ? (
                     <>
-                      <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-solid border-white border-r-transparent" />
-                      Subscribing...
+                      <div className="mr-2 h-4 w-4 animate-spin border-2 border-solid border-toxic-green border-r-transparent" />
+                      Sending...
                     </>
                   ) : status === "success" ? (
                     <>
                       <Check className="mr-2 h-4 w-4" />
-                      Subscribed!
+                      Done!
                     </>
                   ) : (
                     "Subscribe"
@@ -104,12 +130,13 @@ export function NewsletterSignup() {
                 </Button>
               </div>
 
+              {/* Status message - brutalist */}
               {message && (
                 <div
-                  className={`flex items-center gap-2 p-4 rounded-lg ${
+                  className={`flex items-center gap-3 p-4 border-2 ${
                     status === "success"
-                      ? "bg-green-500/10 text-green-400 border border-green-500/20"
-                      : "bg-red-500/10 text-red-400 border border-red-500/20"
+                      ? "bg-toxic-green/10 text-toxic-green border-toxic-green"
+                      : "bg-magenta-shock/10 text-magenta-shock border-magenta-shock"
                   }`}
                 >
                   {status === "success" ? (
@@ -117,13 +144,14 @@ export function NewsletterSignup() {
                   ) : (
                     <AlertCircle className="w-5 h-5 flex-shrink-0" />
                   )}
-                  <p className="text-sm">{message}</p>
+                  <p className="text-xs font-mono">{message.toUpperCase()}</p>
                 </div>
               )}
             </form>
 
-            <p className="text-xs text-gray-500 mt-6">
-              We respect your privacy. Unsubscribe at any time.
+            {/* Privacy note */}
+            <p className="text-[10px] text-concrete-400 mt-8 text-center font-mono">
+              WE RESPECT YOUR PRIVACY. UNSUBSCRIBE ANYTIME.
             </p>
           </div>
         </div>

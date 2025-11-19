@@ -19,74 +19,108 @@ export function MediaGallery({ media }: MediaGalleryProps) {
 
   return (
     <>
-      <section className="py-20 bg-gradient-to-b from-gray-900 to-black">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              <span className="gradient-text">Media Gallery</span>
+      <section className="py-32 bg-electric-black relative overflow-hidden">
+        {/* Geometric background elements */}
+        <div className="absolute top-20 right-10 w-32 h-32 border-4 border-magenta-shock/30 rotate-12" />
+        <div className="absolute bottom-40 left-10 w-48 h-2 bg-toxic-green/20" />
+
+        <div className="container mx-auto px-6 lg:px-8">
+          {/* Section header - brutalist */}
+          <div className="mb-16">
+            <div className="text-mono text-magenta-shock mb-4">
+              // GALLERY
+            </div>
+            <h2 className="text-display-md font-display mb-6">
+              <span className="text-white">Media</span>{" "}
+              <span className="gradient-text-primary">Archive</span>
             </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Photos and videos from recent performances
-            </p>
+            <div className="w-24 h-1 bg-magenta-shock" />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-            {displayMedia.map((item) => (
-              <Card
-                key={item.id}
-                className="bg-card/50 backdrop-blur border-white/10 overflow-hidden group cursor-pointer hover:border-primary/50 transition-all duration-300"
-                onClick={() => setSelectedMedia(item)}
-              >
-                <div className="aspect-video relative overflow-hidden bg-gradient-to-br from-purple-900/20 to-cyan-900/20">
-                  {item.type === "photo" ? (
-                    <img
-                      src={item.url}
-                      alt={item.caption || "Gallery image"}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                    />
-                  ) : (
-                    <>
+          {/* Media grid - brutalist masonry */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+            {displayMedia.map((item, index) => {
+              const borderColors = [
+                "border-neon-cyan",
+                "border-volt-yellow",
+                "border-magenta-shock",
+                "border-toxic-green",
+              ];
+
+              return (
+                <div
+                  key={item.id}
+                  className={`bg-concrete-200 border-2 ${borderColors[index % 4]} overflow-hidden
+                             cursor-pointer group
+                             shadow-[4px_4px_0px_0px_rgba(0,0,0,0.4)]
+                             hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.6)]
+                             hover:translate-x-[-2px] hover:translate-y-[-2px]
+                             transition-all duration-150`}
+                  onClick={() => setSelectedMedia(item)}
+                >
+                  <div className="aspect-video relative overflow-hidden bg-void-black">
+                    {item.type === "photo" ? (
                       <img
-                        src={item.thumbnailUrl || "/placeholder-video.jpg"}
-                        alt={item.caption || "Video thumbnail"}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                        src={item.url}
+                        alt={item.caption || "Gallery image"}
+                        className="w-full h-full object-cover"
                       />
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/20 transition-colors">
-                        <div className="bg-white/20 backdrop-blur-sm rounded-full p-4">
-                          <Video className="w-8 h-8 text-white" />
+                    ) : (
+                      <>
+                        <img
+                          src={item.thumbnailUrl || "/placeholder-video.jpg"}
+                          alt={item.caption || "Video thumbnail"}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center bg-electric-black/60">
+                          <div className={`w-16 h-16 border-4 ${borderColors[index % 4]} bg-electric-black
+                                         flex items-center justify-center`}>
+                            <Video className="w-8 h-8 text-white" />
+                          </div>
                         </div>
+                      </>
+                    )}
+
+                    {/* Type badge */}
+                    <div className="absolute top-3 right-3">
+                      <div className={`px-3 py-1 border-2 ${borderColors[index % 4]} bg-electric-black`}>
+                        <span className="text-mono text-[10px] text-white flex items-center gap-1">
+                          {item.type === "photo" ? (
+                            <ImageIcon className="w-3 h-3" />
+                          ) : (
+                            <Video className="w-3 h-3" />
+                          )}
+                          {item.type.toUpperCase()}
+                        </span>
                       </div>
-                    </>
-                  )}
-
-                  <div className="absolute top-2 right-2">
-                    <Badge variant={item.type === "photo" ? "secondary" : "default"}>
-                      {item.type === "photo" ? (
-                        <ImageIcon className="w-3 h-3 mr-1" />
-                      ) : (
-                        <Video className="w-3 h-3 mr-1" />
-                      )}
-                      {item.type}
-                    </Badge>
-                  </div>
-
-                  {item.caption && (
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <p className="text-sm text-white">{item.caption}</p>
                     </div>
-                  )}
+
+                    {/* Caption overlay */}
+                    {item.caption && (
+                      <div className="absolute bottom-0 left-0 right-0 bg-electric-black/90
+                                    border-t-2 border-concrete-300 p-4
+                                    translate-y-full group-hover:translate-y-0 transition-transform duration-200">
+                        <p className="text-xs text-white font-mono">{item.caption.toUpperCase()}</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </Card>
-            ))}
+              );
+            })}
           </div>
 
-          <div className="text-center">
+          {/* CTA - brutalist */}
+          <div className="flex justify-center">
             <Link href="/media">
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-2 border-white/20 hover:bg-white/10"
-              >
+              <Button className="
+                bg-transparent border-2 border-magenta-shock text-magenta-shock
+                hover:bg-magenta-shock hover:text-electric-black
+                px-10 py-7 text-sm font-mono uppercase tracking-wider
+                transition-all duration-200
+                shadow-[6px_6px_0px_0px_rgba(255,0,128,0.4)]
+                hover:shadow-[8px_8px_0px_0px_rgba(255,0,128,0.6)]
+                hover:translate-x-[-2px] hover:translate-y-[-2px]
+              ">
                 View Full Gallery
               </Button>
             </Link>
